@@ -21,6 +21,12 @@
       overflow-y: auto;
       -webkit-overflow-scrolling: touch;
       touch-action: pan-y;
+      overscroll-behavior: auto;
+    }
+    .scroll-container {
+      width: 100%;
+      overflow-y: auto;
+      -webkit-overflow-scrolling: touch;
     }
     .iframe-container {
       position: relative;
@@ -42,10 +48,7 @@
       border: none;
       padding: 0;
       margin: 0;
-      pointer-events: none;
-    }
-    .iframe-container.interactive iframe {
-      pointer-events: auto;
+      pointer-events: none; /* Deshabilita eventos táctiles */
     }
     .audio-control {
       position: fixed;
@@ -82,12 +85,14 @@
   </style>
 </head>
 <body>
-  <div class="iframe-container">
-    <iframe loading="lazy"
-      src="https://www.canva.com/design/DAGn2moUrag/JdOGBcglHYQadYPBtXAcDQ/view?embed"
-      allow="fullscreen; autoplay"
-      sandbox="allow-same-origin allow-scripts allow-popups">
-    </iframe>
+  <div class="scroll-container">
+    <div class="iframe-container">
+      <iframe loading="lazy"
+        src="https://www.canva.com/design/DAGn2moUrag/JdOGBcglHYQadYPBtXAcDQ/view?embed"
+        allow="fullscreen; autoplay"
+        sandbox="allow-same-origin allow-scripts allow-popups">
+      </iframe>
+    </div>
   </div>
 
   <div class="audio-control">
@@ -104,7 +109,6 @@
   <script>
     const audio = document.getElementById('background-music');
     const audioButton = document.getElementById('audio-button');
-    const iframeContainer = document.querySelector('.iframe-container');
 
     const playIcon = '<svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>';
     const pauseIcon = '<svg viewBox="0 0 24 24"><path d="M6 19h4V5H6zm8-14v14h4V5z"/></svg>';
@@ -128,14 +132,6 @@
         audio.pause();
         audioButton.innerHTML = playIcon;
       }
-    });
-
-    iframeContainer.addEventListener('click', () => {
-      iframeContainer.classList.add('interactive');
-    });
-
-    window.addEventListener('scroll', () => {
-      iframeContainer.classList.remove('interactive');
     });
   </script>
 </body>
