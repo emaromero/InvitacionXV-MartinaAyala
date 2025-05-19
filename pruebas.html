@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <meta name="author" content="Clover Digital https://cloverdigital.vercel.app/">
+  <meta name="description" content="Te invito a celebrar mis quince años! 🎉">
+  <meta property="og:title" content="Invitación a los XV de Martina">
+  <meta property="og:description" content="Te invito a celebrar mis quince años! 🎉">
+  <meta property="og:image" content="/images/invitacion.jpg">
+  <meta property="og:url" content="https://tuproyecto.vercel.app">
+  <meta property="og:type" content="website">
+  <title>Invitacion-Martina-XV</title>
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🎉</text></svg>">
+  <style>
+    html, body {
+      margin: 0;
+      padding: 0;
+      font-family: Arial, sans-serif;
+      background-color: #f0f0f0;
+      overflow-x: hidden;
+      overflow-y: auto;
+      height: 100%;
+      touch-action: auto; /* Mejora el comportamiento táctil */
+      -webkit-overflow-scrolling: touch; /* Scroll suave en iOS */
+    }
+    body {
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+    .iframe-container {
+      position: relative;
+      width: 100%;
+      max-width: 800px;
+      height: 0;
+      padding-top: 177.78%; /* Ajustado a proporción 16:9 para mejor compatibilidad móvil */
+      box-shadow: 0 2px 8px 0 rgba(63,69,81,0.16);
+      margin: 1.6em auto;
+      overflow: hidden;
+      border-radius: 8px;
+      pointer-events: auto;
+    }
+    .iframe-container.disabled {
+      pointer-events: none; /* Desactiva clics durante el scroll */
+    }
+    .iframe-container iframe {
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      top: 0;
+      left: 0;
+      border: none;
+      padding: 0;
+      margin: 0;
+    }
+    .audio-control {
+      position: fixed;
+      top: 20px;
+      right: 20px;
+      z-index: 1000;
+    }
+    .audio-button {
+      width: 40px;
+      height: 40px;
+      background-color: #ecc8ca;
+      border: none;
+      border-radius: 50%;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: background-color 0.3s;
+    }
+    .audio-button:hover {
+      background-color: #d8b4b6;
+    }
+    .audio-button svg {
+      width: 20px;
+      height: 20px;
+      fill: white;
+    }
+    @media (max-width: 768px) {
+      .iframe-container {
+        margin: 1.6em 0;
+        width: 100%;
+        padding-top: 177.78%; /* Mantener proporción en móviles */
+      }
+      html, body {
+        overscroll-behavior-y: contain; /* Evita efectos de rebote en móviles */
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="iframe-container" id="iframe-container">
+    <iframe loading="lazy"
+      src="https://www.canva.com/design/DAGn2moUrag/JdOGBcglHYQadYPBtXAcDQ/view?embed"
+      allowfullscreen="allowfullscreen"
+      allow="fullscreen; autoplay"
+      sandbox="allow-same-origin allow-scripts allow-popups allow-forms allow-pointer-lock allow-top-navigation allow-top-navigation-by-user-activation">
+    </iframe>
+  </div>
+
+  <div class="audio-control">
+    <button id="audio-button" class="audio-button">
+      <svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
+    </button>
+  </div>
+
+  <audio id="background-music" loop>
+    <source src="music.mp3" type="audio/mpeg">
+    Tu navegador no soporta el elemento de audio.
+  </audio>
+
+  <script>
+    const audio = document.getElementById('background-music');
+    const audioButton = document.getElementById('audio-button');
+    const iframeContainer = document.getElementById('iframe-container');
+
+    const playIcon = '<svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>';
+    const pauseIcon = '<svg viewBox="0 0 24 24"><path d="M6 19h4V5H6zm8-14v14h4V5z"/></svg>';
+
+    audio.volume = 0.5;
+    audio.play().then(() => {
+      audioButton.innerHTML = pauseIcon;
+    }).catch(error => {
+      console.log('La reproducción automática falló:', error);
+      audioButton.innerHTML = playIcon;
+    });
+
+    audioButton.addEventListener('click', () => {
+      if (audio.paused) {
+        audio.play().then(() => {
+          audioButton.innerHTML = pauseIcon;
+        }).catch(error => {
+          console.log('Error al reproducir:', error);
+        });
+      } else {
+        audio.pause();
+        audioButton.innerHTML = playIcon;
+      }
+    });
+
+    // Desactivar clics durante el scroll
+    let scrollTimeout;
+    window.addEventListener('scroll', () => {
+      iframeContainer.classList.add('disabled');
+      clearTimeout(scrollTimeout);
+      scrollTimeout = setTimeout(() => {
+        iframeContainer.classList.remove('disabled');
+      }, 300); // Reactiva clics 300ms después de detener el scroll
+    });
+
+    // Forzar scroll suave en móviles
+    document.addEventListener('touchstart', () => {
+      document.body.style.scrollBehavior = 'smooth';
+    });
+  </script>
+</body>
+</html>

@@ -13,45 +13,34 @@
   <title>Invitacion-Martina-XV</title>
   <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🎉</text></svg>">
   <style>
-    body {
+    html, body {
       margin: 0;
+      padding: 0;
       font-family: Arial, sans-serif;
-      min-height: 100vh;
       background-color: #f0f0f0;
-      overflow-y: auto;
-      -webkit-overflow-scrolling: touch;
-      touch-action: pan-y;
-      overscroll-behavior: auto;
+      overflow-x: hidden;
+      overflow-y: auto; /* Habilitar scroll vertical */
     }
-    .scroll-wrapper {
-      width: 100%;
-      height: 100vh;
-      overflow-y: auto;
-      -webkit-overflow-scrolling: touch;
-      touch-action: pan-y;
+    body {
+      min-height: 100vh; /* Permitir que el body crezca */
     }
-    .iframe-container {
+    .pdf-container {
       position: relative;
-      max-width: 800px; /* Limita el ancho para mejor legibilidad */
+      max-width: 800px;
       width: 100%;
       margin: 1.6em auto;
-      aspect-ratio: 100 / 314.5370;
-      max-height: 85vh;
       box-shadow: 0 2px 8px 0 rgba(63,69,81,0.16);
-      overflow: hidden;
       border-radius: 8px;
-      will-change: transform;
+      overflow: hidden;
+      padding-top: 141.4286%; /* Proporción aproximada para A4 (sqrt(2):1) */
     }
-    .iframe-container iframe {
+    .pdf-container iframe {
       position: absolute;
-      width: 100%;
-      height: 100%;
       top: 0;
       left: 0;
+      width: 100%;
+      height: 100%;
       border: none;
-      padding: 0;
-      margin: 0;
-      pointer-events: none;
     }
     .audio-control {
       position: fixed;
@@ -80,23 +69,15 @@
       fill: white;
     }
     @media (max-width: 768px) {
-      .iframe-container {
-        padding-top: 314.5370%;
-        aspect-ratio: unset;
+      .pdf-container {
         margin: 1.6em 0;
       }
     }
   </style>
 </head>
 <body>
-  <div class="scroll-wrapper">
-    <div class="iframe-container">
-      <iframe loading="lazy"
-        src="https://www.canva.com/design/DAGn2moUrag/JdOGBcglHYQadYPBtXAcDQ/view?embed"
-        allow="fullscreen; autoplay"
-        sandbox="allow-same-origin allow-scripts allow-popups">
-      </iframe>
-    </div>
+  <div class="pdf-container">
+    <iframe src="Invitacion-Martina-XV.pdf" allowfullscreen></iframe>
   </div>
 
   <div class="audio-control">
