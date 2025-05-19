@@ -5,14 +5,12 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
   <meta name="author" content="Clover Digital https://cloverdigital.vercel.app/">
   <meta name="description" content="Te invito a celebrar mis quince años! 🎉">
-  <!-- Open Graph para WhatsApp y redes sociales -->
   <meta property="og:title" content="Invitación a los XV de Martina">
   <meta property="og:description" content="Te invito a celebrar mis quince años! 🎉">
-  <meta property="og:image" content="/images/invitacion.jpg"> <!-- Reemplaza con la URL de tu imagen -->
-  <meta property="og:url" content="https://tuproyecto.vercel.app"> <!-- Reemplaza con la URL de tu sitio -->
+  <meta property="og:image" content="/images/invitacion.jpg">
+  <meta property="og:url" content="https://tuproyecto.vercel.app">
   <meta property="og:type" content="website">
   <title>Invitacion-Martina-XV</title>
-  <!-- Favicon -->
   <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🎉</text></svg>">
   <style>
     body {
@@ -22,13 +20,13 @@
       background-color: #f0f0f0;
       overflow-y: auto;
       -webkit-overflow-scrolling: touch;
-      touch-action: pan-y; /* Permite el scroll vertical */
+      touch-action: pan-y;
     }
     .iframe-container {
       position: relative;
       width: 100%;
       aspect-ratio: 100 / 314.5370;
-      max-height: 85vh; /* Reducido para más espacio de scroll */
+      max-height: 85vh;
       box-shadow: 0 2px 8px 0 rgba(63,69,81,0.16);
       margin: 1.6em 0 0.9em;
       overflow: hidden;
@@ -44,9 +42,8 @@
       border: none;
       padding: 0;
       margin: 0;
-      pointer-events: none; /* Deshabilita eventos táctiles por defecto */
+      pointer-events: none;
     }
-    /* Habilita eventos táctiles solo para elementos interactivos dentro del iframe */
     .iframe-container.interactive iframe {
       pointer-events: auto;
     }
@@ -85,7 +82,6 @@
   </style>
 </head>
 <body>
-  <!-- Canva Embed -->
   <div class="iframe-container">
     <iframe loading="lazy"
       src="https://www.canva.com/design/DAGn2moUrag/JdOGBcglHYQadYPBtXAcDQ/view?embed"
@@ -94,14 +90,12 @@
     </iframe>
   </div>
 
-  <!-- Control de audio -->
   <div class="audio-control">
     <button id="audio-button" class="audio-button">
       <svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
     </button>
   </div>
 
-  <!-- Audio -->
   <audio id="background-music" loop>
     <source src="music.mp3" type="audio/mpeg">
     Tu navegador no soporta el elemento de audio.
@@ -115,21 +109,19 @@
     const playIcon = '<svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>';
     const pauseIcon = '<svg viewBox="0 0 24 24"><path d="M6 19h4V5H6zm8-14v14h4V5z"/></svg>';
 
-    // Intentar reproducción automática
     audio.volume = 0.5;
     audio.play().then(() => {
       audioButton.innerHTML = pauseIcon;
-    }).catch((error) => {
+    }).catch(error => {
       console.log('La reproducción automática falló:', error);
       audioButton.innerHTML = playIcon;
     });
 
-    // Controlar audio con el botón
     audioButton.addEventListener('click', () => {
       if (audio.paused) {
         audio.play().then(() => {
           audioButton.innerHTML = pauseIcon;
-        }).catch((error) => {
+        }).catch(error => {
           console.log('Error al reproducir:', error);
         });
       } else {
@@ -138,12 +130,10 @@
       }
     });
 
-    // Habilitar eventos táctiles en el iframe solo al interactuar
     iframeContainer.addEventListener('click', () => {
       iframeContainer.classList.add('interactive');
     });
 
-    // Deshabilitar eventos táctiles al hacer scroll
     window.addEventListener('scroll', () => {
       iframeContainer.classList.remove('interactive');
     });
