@@ -2,21 +2,53 @@
 <html lang="es">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
   <meta name="author" content="Clover Digital https://cloverdigital.vercel.app/">
+  <meta name="description" content="Te invito a celebrar mis quince años! 🎉">
+  <!-- Open Graph para WhatsApp y redes sociales -->
+  <meta property="og:title" content="Invitación a los XV de Martina">
+  <meta property="og:description" content="Te invito a celebrar mis quince años! 🎉">
+  <meta property="og:image" content="/images/invitacion.jpg"> <!-- Reemplaza con la URL de tu imagen -->
+  <meta property="og:url" content="https://tuproyecto.vercel.app"> <!-- Reemplaza con la URL de tu sitio -->
+  <meta property="og:type" content="website">
   <title>Invitacion-Martina-XV</title>
-  <!-- Favicon (emoji como marcador, reemplaza con tu propio favicon) -->
+  <!-- Favicon -->
   <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🎉</text></svg>">
   <style>
     body {
       margin: 0;
       font-family: Arial, sans-serif;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      min-height: 100vh;
+      height: auto;
       background-color: #f0f0f0;
+      overflow-y: auto;
+      -webkit-overflow-scrolling: touch;
+      touch-action: pan-y; /* Permite el scroll vertical */
+    }
+    .iframe-container {
+      position: relative;
+      width: 100%;
+      aspect-ratio: 100 / 314.5370;
+      max-height: 85vh; /* Reducido para más espacio de scroll */
+      box-shadow: 0 2px 8px 0 rgba(63,69,81,0.16);
+      margin: 1.6em 0 0.9em;
+      overflow: hidden;
+      border-radius: 8px;
+      will-change: transform;
+    }
+    .iframe-container iframe {
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      top: 0;
+      left: 0;
+      border: none;
+      padding: 0;
+      margin: 0;
+      pointer-events: none; /* Deshabilita eventos táctiles por defecto */
+    }
+    /* Habilita eventos táctiles solo para elementos interactivos dentro del iframe */
+    .iframe-container.interactive iframe {
+      pointer-events: auto;
     }
     .audio-control {
       position: fixed;
@@ -37,19 +69,25 @@
       transition: background-color 0.3s;
     }
     .audio-button:hover {
-      background-color: #ecc8ca;
+      background-color: #d8b4b6;
     }
     .audio-button svg {
       width: 20px;
       height: 20px;
       fill: white;
     }
+    @media (max-width: 768px) {
+      .iframe-container {
+        padding-top: 314.5370%;
+        aspect-ratio: unset;
+      }
+    }
   </style>
 </head>
 <body>
-  <!-- Canva Embed sin allowfullscreen redundante -->
-  <div style="position: relative; width: 100%; height: 0; padding-top: 314.5370%; padding-bottom: 0; box-shadow: 0 2px 8px 0 rgba(63,69,81,0.16); margin-top: 1.6em; margin-bottom: 0.9em; overflow: hidden; border-radius: 8px; will-change: transform;">
-    <iframe loading="lazy" style="position: absolute; width: 100%; height: 100%; top: 0; left: 0; border: none; padding: 0; margin: 0;"
+  <!-- Canva Embed -->
+  <div class="iframe-container">
+    <iframe loading="lazy"
       src="https://www.canva.com/design/DAGn2moUrag/JdOGBcglHYQadYPBtXAcDQ/view?embed"
       allow="fullscreen; autoplay"
       sandbox="allow-same-origin allow-scripts allow-popups">
@@ -72,6 +110,7 @@
   <script>
     const audio = document.getElementById('background-music');
     const audioButton = document.getElementById('audio-button');
+    const iframeContainer = document.querySelector('.iframe-container');
 
     const playIcon = '<svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>';
     const pauseIcon = '<svg viewBox="0 0 24 24"><path d="M6 19h4V5H6zm8-14v14h4V5z"/></svg>';
@@ -97,6 +136,16 @@
         audio.pause();
         audioButton.innerHTML = playIcon;
       }
+    });
+
+    // Habilitar eventos táctiles en el iframe solo al interactuar
+    iframeContainer.addEventListener('click', () => {
+      iframeContainer.classList.add('interactive');
+    });
+
+    // Deshabilitar eventos táctiles al hacer scroll
+    window.addEventListener('scroll', () => {
+      iframeContainer.classList.remove('interactive');
     });
   </script>
 </body>
