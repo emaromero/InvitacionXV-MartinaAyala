@@ -171,6 +171,11 @@
     }
 
     img.addEventListener('load', hideLoadingOverlay);
+    img.addEventListener('error', () => {
+      console.log('Error al cargar la imagen.');
+      hideLoadingOverlay();
+      mainContainer.innerHTML = '<p style="color: red; text-align: center; padding: 20px;">No se pudo cargar la invitación. Por favor, intenta de nuevo.</p>';
+    });
 
     // Timeout para ocultar el preloader después de 5 segundos
     setTimeout(hideLoadingOverlay, 5000);
