@@ -136,7 +136,7 @@
       <area target="" alt="googlemaps" title="googlemaps" href="https://www.google.com/maps/place/Jano's+Pilar+Boutique/@-34.407192,-58.8608372,16z/data=!4m6!3m5!1s0x95bc9d0c0c9efb97:0xadc21ffe83317c79!8m2!3d-34.407639!4d-58.8558502!16s%2Fg%2F11v663xcbd?entry=ttu&g_ep=EgoyMDI1MDUxMy4xIKXMDSoASAFQAw%3D%3D" coords="365,1391,715,1479" shape="rect">
       <area target="" alt="googlecalendar" title="googlecalendar" href="https://calendar.google.com/calendar/render?action=TEMPLATE&text=Martu+cumple+15+%F0%9F%8E%89&dates=20250712T003000Z/20250712T083000Z&details=%C2%A1Te+espero+para+festejar+mis+15!+Confirm%C3%A1+tu+asistencia.&location=Jano%27s+Pilar+Boutique" coords="385,1671,682,1740" shape="rect">
       <area target="" alt="confirmacionwhatsapp" title="confirmacionwhatsapp" href="https://wa.me/541125377709?text=Hola%2C%20quiero%20confirmar%20mi%20asistencia%20al%20evento.%20Respondo%3A%20S%C3%AD%20%2F%20No" coords="351,3189,840,3248" shape="rect">
-      <area id="audio-area" alt="audiobutton" title="audiobutton" href="" coords="945,118,43" shape="circle">
+      <area target="" alt="audiobutton" title="audiobutton" href="" coords="945,118,43" shape="circle">
     </map>
   </div>
 
@@ -155,7 +155,7 @@
     const audio = document.getElementById('background-music');
     const audioButton = document.getElementById('audio-button');
     const audioControl = document.getElementById('audio-control');
-    const audioArea = document.getElementById('audio-area');
+    const audioArea = document.querySelector('area[alt="audiobutton"]');
     const img = document.getElementById('main-image');
     const loadingOverlay = document.getElementById('loading-overlay');
     const mainContainer = document.getElementById('main-container');
@@ -233,7 +233,7 @@
       audioControl.style.backgroundColor = '#ccc';
     });
 
-    document.querySelectorAll('area:not(#audio-area)').forEach(area => {
+    document.querySelectorAll('area:not([alt="audiobutton"])').forEach(area => {
       area.addEventListener('click', (e) => {
         e.preventDefault();
         window.open(area.href, '_blank');
