@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=1080, initial-scale=1.0, viewport-fit=cover">
+  <meta name="author" content="Clover Digital https://cloverdigital.vercel.app/">
+  <meta name="description" content="Te invito a celebrar mis quince años! 🎉">
+  <meta property="og:title" content="Invitación a los XV de Martina">
+  <meta property="og:description" content="Te invito a celebrar mis quince años! 🎉">
+  <meta property="og:image" content="/images/invitacion.jpg">
+  <meta property="og:url" content="https://invitacion-xv-martina-ayala.vercel.app/">
+  <meta property="og:type" content="website">
+  <title>Invitacion-Martina-XV</title>
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🎉</text></svg>">
+  <link rel="preload" href="Invitacion-Martina-XV.jpg" as="image">
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+      display: flex;
+      justify-content: center;
+      align-items: flex-start;
+      min-height: 100vh;
+      background-color: #f5f5f5;
+      position: relative;
+      touch-action: manipulation;
+      overflow-x: hidden;
+    }
+    .container {
+      width: 1080px;
+      height: 3397px;
+      position: relative;
+      z-index: 1;
+      display: none;
+    }
+    .container.loaded {
+      display: block;
+    }
+    img {
+      width: 1080px;
+      height: 3397px;
+      border: none;
+      display: block;
+      object-fit: contain;
+    }
+    .audio-control {
+      position: absolute;
+      top: 0;
+      left: 0;
+      z-index: 1000;
+      display: block;
+    }
+    .audio-button {
+      width: 40px;
+      height: 40px;
+      background-color: #ecc8ca;
+      border: none;
+      border-radius: 50%;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: background-color 0.3s;
+      outline: none;
+      touch-action: manipulation;
+    }
+    .audio-button:hover {
+      background-color: #d8b4b6;
+    }
+    .audio-button svg {
+      width: 20px;
+      height: 20px;
+      fill: white;
+    }
+    .loading-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-color: #ecc8ca;
+      background-image: radial-gradient(circle, rgba(255, 255, 255, 0.2) 2px, transparent 2px);
+      background-size: 10px 10px;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      z-index: 2000;
+      opacity: 1;
+      transition: opacity 0.5s ease-out;
+    }
+    .loading-overlay.hidden {
+      opacity: 0;
+      pointer-events: none;
+    }
+    .loading-text {
+      color: #ffffff;
+      font-size: 24px;
+      font-family: Arial, sans-serif;
+      margin-bottom: 20px;
+      text-align: center;
+    }
+    .loading-icon {
+      font-size: 48px;
+      animation: spin 2s linear infinite;
+    }
+    @keyframes spin {
+      100% { transform: rotate(360deg); }
+    }
+    @media (max-width: 1080px) {
+      .container, img {
+        width: 100%;
+        height: auto;
+      }
+      .loading-text {
+        font-size: 18px;
+        padding: 0 20px;
+      }
+      .loading-icon {
+        font-size: 36px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="loading-overlay" id="loading-overlay">
+    <div class="loading-text">¡Cargando tu invitación! 🎉</div>
+    <div class="loading-icon">🎂</div>
+  </div>
+
+  <div class="container" id="main-container">
+    <img id="main-image" 
+         src="Invitacion-Martina-XV.jpg" 
+         srcset="Invitacion-Martina-XV.jpg 1x, Invitacion-Martina-XV-2x.jpg 2x" 
+         usemap="#image-map" 
+         alt="Invitación Martina XV">
+    <map name="image-map">
+      <area target="_blank" alt="googlemaps" title="googlemaps" href="https://www.google.com/maps/place/Jano's+Pilar+Boutique/@-34.407192,-58.8608372,16z/data=!4m6!3m5!1s0x95bc9d0c0c9efb97:0xadc21ffe83317c79!8m2!3d-34.407639!4d-58.8558502!16s%2Fg%2F11v663xcbd?entry=ttu&g_ep=EgoyMDI1MDUxMy4xIKXMDSoASAFQAw%3D%3D" coords="356,1389,720,1483" shape="rect">
+      <area target="_blank" alt="googlecalendar" title="googlecalendar" href="https://calendar.google.com/calendar/render?action=TEMPLATE&text=Martu+cumple+15+%F0%9F%8E%89&dates=20250712T003000Z/20250712T083000Z&details=%C2%A1Te+espero+para+festejar+mis+15!+Confirm%C3%A1+tu+asistencia.&location=Jano%27s+Pilar+Boutique" coords="384,1681,683,1747" shape="rect">
+      <area target="_blank" alt="confirmacionwhatsapp" title="confirmacionwhatsapp" href="https://wa.me/541125377709?text=Hola%2C%20quiero%20confirmar%20mi%20asistencia%20al%20evento.%20Respondo%3A%20S%C3%AD%20%2F%20No" coords="350,3193,831,3249" shape="rect">
+      <area id="audio-area" alt="audiobutton" title="audiobutton" href="#" coords="984,85,51" shape="circle">
+    </map>
+  </div>
+
+  <div class="audio-control" id="audio-control">
+    <button id="audio-button" class="audio-button">
+      <svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
+    </button>
+  </div>
+
+  <audio id="background-music" loop>
+    <source src="music.mp3" type="audio/mpeg">
+    Tu navegador no soporta el elemento de audio.
+  </audio>
+
+  <script>
+    const audio = document.getElementById('background-music');
+    const audioButton = document.getElementById('audio-button');
+    const audioControl = document.getElementById('audio-control');
+    const audioArea = document.getElementById('audio-area');
+    const img = document.getElementById('main-image');
+    const loadingOverlay = document.getElementById('loading-overlay');
+    const mainContainer = document.getElementById('main-container');
+
+    const playIcon = '<svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>';
+    const pauseIcon = '<svg viewBox="0 0 24 24"><path d="M6 19h4V5H6zm8-14v14h4V5z"/></svg>';
+
+    img.addEventListener('load', () => {
+      loadingOverlay.classList.add('hidden');
+      mainContainer.classList.add('loaded');
+      positionAudioButton();
+    });
+
+    function positionAudioButton() {
+      const imgRect = img.getBoundingClientRect();
+      const imgWidth = img.naturalWidth;
+      const imgHeight = img.naturalHeight;
+      const scaleX = imgRect.width / imgWidth;
+      const scaleY = imgRect.height / imgHeight;
+
+      const audioX = 984 * scaleX;
+      const audioY = 85 * scaleY;
+
+      audioControl.style.left = `${audioX - 20}px`;
+      audioControl.style.top = `${audioY - 20}px`;
+    }
+
+    window.addEventListener('load', positionAudioButton);
+    window.addEventListener('resize', positionAudioButton);
+
+    audioButton.style.display = 'block';
+
+    audio.addEventListener('canplaythrough', () => {
+      audio.volume = 0.5;
+      audio.play().then(() => {
+        audioButton.innerHTML = pauseIcon;
+      }).catch(error => {
+        console.log('Reproducción automática falló:', error);
+        audioButton.innerHTML = playIcon;
+      });
+    });
+
+    function toggleAudio() {
+      if (audio.paused) {
+        audio.play().then(() => {
+          audioButton.innerHTML = pauseIcon;
+        }).catch(error => {
+          console.log('Error al reproducir:', error);
+        });
+      } else {
+        audio.pause();
+        audioButton.innerHTML = playIcon;
+      }
+    }
+
+    audioButton.addEventListener('click', toggleAudio);
+    audioArea.addEventListener('click', (e) => {
+      e.preventDefault();
+      toggleAudio();
+    });
+
+    audio.addEventListener('error', () => {
+      console.log('Error al cargar el archivo de audio. Verifica la ruta o el archivo.');
+      audioButton.innerHTML = playIcon;
+    });
+
+    document.querySelectorAll('area:not(#audio-area)').forEach(area => {
+      area.addEventListener('click', (e) => {
+        e.preventDefault();
+        window.open(area.href, '_blank');
+      });
+    });
+  </script>
+</body>
+</html>
