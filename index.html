@@ -163,10 +163,19 @@
     const playIcon = '<svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>';
     const pauseIcon = '<svg viewBox="0 0 24 24"><path d="M6 19h4V5H6zm8-14v14h4V5z"/></svg>';
 
+    // Coordenadas originales de las áreas (basadas en la imagen original de 1080px de ancho)
+    const originalAreas = [
+      { alt: 'googlemaps', coords: [365, 1391, 715, 1479], shape: 'rect', href: 'https://www.google.com/maps/place/Jano%27s+Pilar+Boutique/@-34.407192,-58.8608372,16z/data=!4m6!3m5!1s0x95bc9d0c0c9efb97:0xadc21ffe83317c79!8m2!3d-34.407639!4d-58.8558502!16s%2Fg%2F11v663xcbd?entry=ttu&g_ep=EgoyMDI1MDUxMy4xIKXMDSoASAFQAw%3D%3D' },
+      { alt: 'googlecalendar', coords: [385, 1671, 682, 1740], shape: 'rect', href: 'https://calendar.google.com/calendar/render?action=TEMPLATE&text=Martu+cumple+15+%F0%9F%8E%89&dates=20250712T003000Z/20250712T083000Z&details=%C2%A1Te+espero+para+festejar+mis+15!+Confirm%C3%A1+tu+asistencia.&location=Jano%27s+Pilar+Boutique' },
+      { alt: 'confirmacionwhatsapp', coords: [351, 3189, 840, 3248], shape: 'rect', href: 'https://wa.me/541125377709?text=Hola%2C%20quiero%20confirmar%20mi%20asistencia%20al%20evento.%20Respondo%3A%20S%C3%AD%20%2F%20No' },
+      { alt: 'audiobutton', coords: [945, 118, 43], shape: 'circle', href: '' }
+    ];
+
     function hideLoadingOverlay() {
       loadingOverlay.classList.add('hidden');
       mainContainer.classList.add('loaded');
       positionAudioButton();
+      updateImageMap();
     }
 
     img.addEventListener('load', hideLoadingOverlay);
@@ -192,8 +201,85 @@
       audioControl.style.top = `${audioY - 24}px`;
     }
 
-    window.addEventListener('load', positionAudioButton);
-    window.addEventListener('resize', positionAudioButton);
+    function updateImageMap() {
+      if (!img.complete || img.naturalWidth === 0) return;
+      const imgRect = img.getBoundingClientRect();
+      const imgWidth = img.naturalWidth;
+      const scaleX = imgRect.width / imgWidth;
+      const scaleY = imgRect.height / img.naturalHeight;
+
+      const imageMap = document.querySelector('map[name="image-map"]');
+      imageMap.innerHTML = ''; // Limpiar el mapa actual
+
+      originalAreas.forEach(area => {
+        let newCoords;
+        if (area.shape === 'rect') {
+          // Escalar coordenadas para rectángulos (x1, y1, x2, y2)
+          newCoords = [
+            Math.round(area.coords[0] * scaleX),
+            Math.round(area.coords[1] * scaleY),
+            Math.round(area.coords[2] * scaleX),
+            Math.round(area.coords[3] * scaleY)
+          ].join(',');
+        } else if (area.shape === 'circle') {
+          // Escalar coordenadas para círculos (x, y, radio)
+          newCoords = [
+            Math.round(area.coords[0] * scaleX),
+            Math.round(area.coords[1] * scaleY),
+            Math.round(area.coords[2] * scaleX) // Escalar el radio según scaleX
+          ].join(',');
+        }
+
+        const areaElement = document.createElement('area');
+        areaElement.setAttribute('target', '');
+        areaElement.setAttribute('alt', area.alt);
+        areaElement.setAttribute('title', area.alt);
+        areaElement.setAttribute('href', area.href);
+        areaElement.setAttribute('coords', newCoords);
+        areaElement.setAttribute('shape', area.shape);
+        imageMap.appendChild(areaElement);
+      });
+
+      // Reasignar eventos a las nuevas áreas
+      document.querySelectorAll('area:not([alt="audiobutton"])').forEach(area => {
+        area.addEventListener('click', (e) => {
+          e.preventDefault();
+          window.open(area.href, '_blank');
+        });
+        area.addEventListener('keydown', (e) => {
+          if (e.key === 'Enter' || e.key === ' ') {
+            e.preventDefault();
+            window.open(area.href, '_blank');
+          }
+        });
+      });
+
+      // Reasignar eventos al área de audio
+      const newAudioArea = document.querySelector('area[alt="audiobutton"]');
+      newAudioArea.addEventListener('click', (e) => {
+        e.preventDefault();
+        toggleAudio();
+      });
+      newAudioArea.addEventListener('keydown', (e) => {
+        if (e.key === 'Enter' || e.key === ' ') {
+          e.preventDefault();
+          toggleAudio();
+        }
+      });
+    }
+
+    window.addEventListener('load', () => {
+      positionAudioButton();
+      updateImageMap();
+    });
+    window.addEventListener('resize', () => {
+      positionAudioButton();
+      updateImageMap();
+    });
+    window.addEventListener('orientationchange', () => {
+      positionAudioButton();
+      updateImageMap();
+    });
 
     audioButton.style.display = 'block';
 
@@ -233,6 +319,7 @@
       audioControl.style.backgroundColor = '#ccc';
     });
 
+    // Eventos iniciales para las áreas (se reasignarán después de updateImageMap)
     document.querySelectorAll('area:not([alt="audiobutton"])').forEach(area => {
       area.addEventListener('click', (e) => {
         e.preventDefault();
