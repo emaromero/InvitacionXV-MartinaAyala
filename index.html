@@ -27,11 +27,11 @@
       justify-content: center;
       align-items: flex-start;
       min-height: 100vh;
-      touch-action: pan-y;
+      /* Eliminamos touch-action: pan-y para no restringir toques */
     }
     .container {
       width: 100%;
-      max-width: 1080px; /* Ancho máximo basado en la imagen original */
+      max-width: 1080px;
       display: none;
       position: relative;
     }
@@ -43,7 +43,7 @@
       height: auto;
       display: block;
       object-fit: contain;
-      max-width: 1080px; /* Mantener el ancho original */
+      max-width: 1080px;
     }
     .audio-control {
       position: absolute;
@@ -66,6 +66,9 @@
     }
     .audio-button:hover {
       background-color: #d8b4b6;
+    }
+    .audio-button:active {
+      background-color: #c89fa2; /* Feedback visual al tocar */
     }
     .audio-button svg {
       width: 24px;
@@ -105,10 +108,26 @@
     @keyframes spin {
       100% { transform: rotate(360deg); }
     }
+    /* Estilo para feedback visual en áreas del mapa */
+    area:active {
+      cursor: pointer;
+    }
+    /* Overlay para feedback visual en áreas del mapa */
+    .area-overlay {
+      position: absolute;
+      background-color: rgba(200, 159, 162, 0.3); /* Color semi-transparente */
+      pointer-events: none;
+      z-index: 999;
+      transition: opacity 0.2s ease;
+      opacity: 0;
+    }
+    .area-overlay.active {
+      opacity: 1;
+    }
     @media (max-width: 768px) {
       .container, img {
         width: 100%;
-        max-width: 100%; /* Ajuste completo al ancho del dispositivo */
+        max-width: 100%;
         height: auto;
       }
       .loading-text {
@@ -133,6 +152,7 @@
          alt="Invitación Martina XV" 
          loading="eager">
     <map name="image-map">
+      <!-- Áreas iniciales, se actualizarán dinámicamente -->
       <area target="" alt="googlemaps" title="googlemaps" href="https://www.google.com/maps/place/Jano's+Pilar+Boutique/@-34.407192,-58.8608372,16z/data=!4m6!3m5!1s0x95bc9d0c0c9efb97:0xadc21ffe83317c79!8m2!3d-34.407639!4d-58.8558502!16s%2Fg%2F11v663xcbd?entry=ttu&g_ep=EgoyMDI1MDUxMy4xIKXMDSoASAFQAw%3D%3D" coords="365,1391,715,1479" shape="rect">
       <area target="" alt="googlecalendar" title="googlecalendar" href="https://calendar.google.com/calendar/render?action=TEMPLATE&text=Martu+cumple+15+%F0%9F%8E%89&dates=20250712T003000Z/20250712T083000Z&details=%C2%A1Te+espero+para+festejar+mis+15!+Confirm%C3%A1+tu+asistencia.&location=Jano%27s+Pilar+Boutique" coords="385,1671,682,1740" shape="rect">
       <area target="" alt="confirmacionwhatsapp" title="confirmacionwhatsapp" href="https://wa.me/541125377709?text=Hola%2C%20quiero%20confirmar%20mi%20asistencia%20al%20evento.%20Respondo%3A%20S%C3%AD%20%2F%20No" coords="351,3189,840,3248" shape="rect">
@@ -146,7 +166,7 @@
     </button>
   </div>
 
-  <audio id="background-music" loop preload="none">
+  <audio id="background-music" loop preload="metadata">
     <source src="music.mp3" type="audio/mpeg">
     Tu navegador no soporta el elemento de audio.
   </audio>
@@ -163,12 +183,32 @@
     const playIcon = '<svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>';
     const pauseIcon = '<svg viewBox="0 0 24 24"><path d="M6 19h4V5H6zm8-14v14h4V5z"/></svg>';
 
-    // Coordenadas originales de las áreas (basadas en la imagen original de 1080px de ancho)
+    // Coordenadas originales de las áreas (aumentadas un 20% para mejor toque)
     const originalAreas = [
-      { alt: 'googlemaps', coords: [365, 1391, 715, 1479], shape: 'rect', href: 'https://www.google.com/maps/place/Jano%27s+Pilar+Boutique/@-34.407192,-58.8608372,16z/data=!4m6!3m5!1s0x95bc9d0c0c9efb97:0xadc21ffe83317c79!8m2!3d-34.407639!4d-58.8558502!16s%2Fg%2F11v663xcbd?entry=ttu&g_ep=EgoyMDI1MDUxMy4xIKXMDSoASAFQAw%3D%3D' },
-      { alt: 'googlecalendar', coords: [385, 1671, 682, 1740], shape: 'rect', href: 'https://calendar.google.com/calendar/render?action=TEMPLATE&text=Martu+cumple+15+%F0%9F%8E%89&dates=20250712T003000Z/20250712T083000Z&details=%C2%A1Te+espero+para+festejar+mis+15!+Confirm%C3%A1+tu+asistencia.&location=Jano%27s+Pilar+Boutique' },
-      { alt: 'confirmacionwhatsapp', coords: [351, 3189, 840, 3248], shape: 'rect', href: 'https://wa.me/541125377709?text=Hola%2C%20quiero%20confirmar%20mi%20asistencia%20al%20evento.%20Respondo%3A%20S%C3%AD%20%2F%20No' },
-      { alt: 'audiobutton', coords: [945, 118, 43], shape: 'circle', href: '' }
+      {
+        alt: 'googlemaps',
+        coords: [348, 1374, 732, 1496], // Ampliado: 365-17, 1391-17, 715+17, 1479+17
+        shape: 'rect',
+        href: 'https://www.google.com/maps/place/Jano%27s+Pilar+Boutique/@-34.407192,-58.8608372,16z/data=!4m6!3m5!1s0x95bc9d0c0c9efb97:0xadc21ffe83317c79!8m2!3d-34.407639!4d-58.8558502!16s%2Fg%2F11v663xcbd?entry=ttu&g_ep=EgoyMDI1MDUxMy4xIKXMDSoASAFQAw%3D%3D'
+      },
+      {
+        alt: 'googlecalendar',
+        coords: [368, 1654, 699, 1757], // Ampliado: 385-17, 1671-17, 682+17, 1740+17
+        shape: 'rect',
+        href: 'https://calendar.google.com/calendar/render?action=TEMPLATE&text=Martu+cumple+15+%F0%9F%8E%89&dates=20250712T003000Z/20250712T083000Z&details=%C2%A1Te+espero+para+festejar+mis+15!+Confirm%C3%A1+tu+asistencia.&location=Jano%27s+Pilar+Boutique'
+      },
+      {
+        alt: 'confirmacionwhatsapp',
+        coords: [334, 3172, 857, 3265], // Ampliado: 351-17, 3189-17, 840+17, 3248+17
+        shape: 'rect',
+        href: 'https://wa.me/541125377709?text=Hola%2C%20quiero%20confirmar%20mi%20asistencia%20al%20evento.%20Respondo%3A%20S%C3%AD%20%2F%20No'
+      },
+      {
+        alt: 'audiobutton',
+        coords: [945, 118, 52], // Radio aumentado de 43 a 52 (20% más)
+        shape: 'circle',
+        href: ''
+      }
     ];
 
     function hideLoadingOverlay() {
@@ -211,8 +251,12 @@
       const imageMap = document.querySelector('map[name="image-map"]');
       imageMap.innerHTML = ''; // Limpiar el mapa actual
 
+      // Limpiar overlays previos
+      document.querySelectorAll('.area-overlay').forEach(overlay => overlay.remove());
+
       originalAreas.forEach(area => {
         let newCoords;
+        let overlayStyle = '';
         if (area.shape === 'rect') {
           // Escalar coordenadas para rectángulos (x1, y1, x2, y2)
           newCoords = [
@@ -221,13 +265,28 @@
             Math.round(area.coords[2] * scaleX),
             Math.round(area.coords[3] * scaleY)
           ].join(',');
+          // Crear overlay para feedback visual
+          overlayStyle = `
+            left: ${newCoords.split(',')[0]}px;
+            top: ${newCoords.split(',')[1]}px;
+            width: ${newCoords.split(',')[2] - newCoords.split(',')[0]}px;
+            height: ${newCoords.split(',')[3] - newCoords.split(',')[1]}px;
+          `;
         } else if (area.shape === 'circle') {
           // Escalar coordenadas para círculos (x, y, radio)
           newCoords = [
             Math.round(area.coords[0] * scaleX),
             Math.round(area.coords[1] * scaleY),
-            Math.round(area.coords[2] * scaleX) // Escalar el radio según scaleX
+            Math.round(area.coords[2] * scaleX)
           ].join(',');
+          // Crear overlay circular
+          overlayStyle = `
+            left: ${newCoords.split(',')[0] - newCoords.split(',')[2]}px;
+            top: ${newCoords.split(',')[1] - newCoords.split(',')[2]}px;
+            width: ${newCoords.split(',')[2] * 2}px;
+            height: ${newCoords.split(',')[2] * 2}px;
+            border-radius: 50%;
+          `;
         }
 
         const areaElement = document.createElement('area');
@@ -238,6 +297,13 @@
         areaElement.setAttribute('coords', newCoords);
         areaElement.setAttribute('shape', area.shape);
         imageMap.appendChild(areaElement);
+
+        // Crear overlay para feedback visual
+        const overlay = document.createElement('div');
+        overlay.className = 'area-overlay';
+        overlay.dataset.alt = area.alt;
+        overlay.style.cssText = overlayStyle;
+        mainContainer.appendChild(overlay);
       });
 
       // Reasignar eventos a las nuevas áreas
@@ -245,11 +311,18 @@
         area.addEventListener('click', (e) => {
           e.preventDefault();
           window.open(area.href, '_blank');
+          showFeedback(area.alt);
+        });
+        area.addEventListener('touchstart', (e) => {
+          e.preventDefault();
+          window.open(area.href, '_blank');
+          showFeedback(area.alt);
         });
         area.addEventListener('keydown', (e) => {
           if (e.key === 'Enter' || e.key === ' ') {
             e.preventDefault();
             window.open(area.href, '_blank');
+            showFeedback(area.alt);
           }
         });
       });
@@ -259,27 +332,56 @@
       newAudioArea.addEventListener('click', (e) => {
         e.preventDefault();
         toggleAudio();
+        showFeedback('audiobutton');
+      });
+      newAudioArea.addEventListener('touchstart', (e) => {
+        e.preventDefault();
+        toggleAudio();
+        showFeedback('audiobutton');
       });
       newAudioArea.addEventListener('keydown', (e) => {
         if (e.key === 'Enter' || e.key === ' ') {
           e.preventDefault();
           toggleAudio();
+          showFeedback('audiobutton');
         }
       });
+    }
+
+    // Función para mostrar feedback visual
+    function showFeedback(alt) {
+      const overlay = document.querySelector(`.area-overlay[data-alt="${alt}"]`);
+      if (overlay) {
+        overlay.classList.add('active');
+        setTimeout(() => overlay.classList.remove('active'), 200);
+      }
+    }
+
+    // Función debounce para optimizar eventos
+    function debounce(func, wait) {
+      let timeout;
+      return function executedFunction(...args) {
+        const later = () => {
+          clearTimeout(timeout);
+          func(...args);
+        };
+        clearTimeout(timeout);
+        timeout = setTimeout(later, wait);
+      };
     }
 
     window.addEventListener('load', () => {
       positionAudioButton();
       updateImageMap();
     });
-    window.addEventListener('resize', () => {
+    window.addEventListener('resize', debounce(() => {
       positionAudioButton();
       updateImageMap();
-    });
-    window.addEventListener('orientationchange', () => {
+    }, 100));
+    window.addEventListener('orientationchange', debounce(() => {
       positionAudioButton();
       updateImageMap();
-    });
+    }, 100));
 
     audioButton.style.display = 'block';
 
@@ -301,14 +403,26 @@
     }
 
     audioButton.addEventListener('click', toggleAudio);
+    audioButton.addEventListener('touchstart', (e) => {
+      e.preventDefault();
+      toggleAudio();
+      showFeedback('audiobutton');
+    });
     audioArea.addEventListener('click', (e) => {
       e.preventDefault();
       toggleAudio();
+      showFeedback('audiobutton');
+    });
+    audioArea.addEventListener('touchstart', (e) => {
+      e.preventDefault();
+      toggleAudio();
+      showFeedback('audiobutton');
     });
     audioArea.addEventListener('keydown', (e) => {
       if (e.key === 'Enter' || e.key === ' ') {
         e.preventDefault();
         toggleAudio();
+        showFeedback('audiobutton');
       }
     });
 
@@ -324,11 +438,18 @@
       area.addEventListener('click', (e) => {
         e.preventDefault();
         window.open(area.href, '_blank');
+        showFeedback(area.alt);
+      });
+      area.addEventListener('touchstart', (e) => {
+        e.preventDefault();
+        window.open(area.href, '_blank');
+        showFeedback(area.alt);
       });
       area.addEventListener('keydown', (e) => {
         if (e.key === 'Enter' || e.key === ' ') {
           e.preventDefault();
           window.open(area.href, '_blank');
+          showFeedback(area.alt);
         }
       });
     });
