@@ -31,7 +31,7 @@
     }
     .container {
       width: 100%;
-      max-width: 100%;
+      max-width: 1080px; /* Ancho máximo basado en la imagen original */
       display: none;
       position: relative;
     }
@@ -43,8 +43,7 @@
       height: auto;
       display: block;
       object-fit: contain;
-      max-width: 100%;
-      aspect-ratio: 1080 / 3397;
+      max-width: 1080px; /* Mantener el ancho original */
     }
     .audio-control {
       position: absolute;
@@ -109,6 +108,7 @@
     @media (max-width: 768px) {
       .container, img {
         width: 100%;
+        max-width: 100%; /* Permitir que se ajuste al ancho del dispositivo */
         height: auto;
       }
       .loading-text {
